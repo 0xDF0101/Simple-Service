@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Step 1189 | Backend Server</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; border: 1px solid #334155; }
+        h1 { color: #38bdf8; font-size: 2.5rem; margin-bottom: 0.5rem; }
+        p { color: #94a3b8; margin-bottom: 2rem; }
+        .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .status-item { background: #334155; padding: 1rem; border-radius: 0.75rem; }
+        .status-label { font-size: 0.75rem; color: #38bdf8; text-transform: uppercase; }
+        .status-value { font-size: 1.25rem; font-weight: bold; margin-top: 0.25rem; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; background: #38bdf8; color: #0f172a; border-radius: 0.5rem; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: #7dd3fc; transform: translateY(-2px); }
+        .footer { margin-top: 1.5rem; font-size: 0.8rem; color: #475569; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Step 1189 📖</h1>
+    <p>Bible Reading Checklist Backend</p>
+
+    <div class="status-grid">
+        <div class="status-item">
+            <div class="status-label">Database</div>
+            <div class="status-value">H2 (Mem)</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Entities</div>
+            <div class="status-value">Active</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Metadata</div>
+            <div class="status-value">66 Books</div>
+        </div>
+    </div>
+
+    <a href="/h2-console" class="btn">Go to H2 Console</a>
+
+    <div class="footer">
+        Server is running on <b>localhost:8080</b><br>
+        Designed by Eugene
+    </div>
+</div>
+</body>
+</html>
