@@ -1,6 +1,5 @@
-package org.example.bible;
+package org.example.domain.bible;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.Bible;
@@ -8,7 +7,6 @@ import org.example.exception.EntityNotFoundException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
@@ -28,18 +26,13 @@ public class BibleService implements ApplicationRunner {
         this.cachedBibles = list;
     }
 
-    @ModelAttribute("bibles") // 별도 로직 없이 캐싱된 bible 데이터를 꺼내쓸 수 있음
     public List<Bible> getAllBibles() {
         return cachedBibles;
     }
-
 
     public Bible getBibleInfo(int bibleId) {
 
         return bibleRepository.findById(bibleId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 성경을 찾을 수 없습니다."));
     }
-
-
-
 }

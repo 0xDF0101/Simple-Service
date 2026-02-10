@@ -1,4 +1,4 @@
-package org.example.user.dto;
+package org.example.domain.user.dto;
 
 import org.example.entity.Progress;
 import org.example.entity.User;

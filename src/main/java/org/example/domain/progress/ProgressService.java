@@ -1,0 +1,103 @@
+package org.example.domain.progress;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.domain.bible.BibleRepository;
+import org.example.domain.progress.dto.RecordRequest;
+import org.example.domain.user.UserRepository;
+import org.example.entity.Bible;
+import org.example.entity.Progress;
+import org.example.entity.User;
+import org.example.exception.EntityNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class ProgressService {
+
+    private final ProgressRepository progressRepository;
+    private final UserRepository userRepository;
+    private final BibleRepository bibleRepository;
+
+    public Map<Integer, Map<Integer, Integer>> getAllProgress(Long userId) {
+
+        Map<Integer, Map<Integer, Integer>> allProgress = new HashMap<>();
+        // <권, <장, 읽은 횟수>>
+        List<Progress> progressList = progressRepository.findAllByUserId(userId);
+        // ---> 읽었던 모든 권을 가져옴
+
+        for(Progress progress : progressList) {
+            Map<Integer, Integer> convertedProgress = convertBitmapToReadMap(progress.getProgressData());
+            // 비트맵 -> 해시맵 변환
+            log.debug("✅ Bitmap -> HashMap 변환 완료 : {}", progress.getBible().getKorName());
+            allProgress.put(progress.getBible().getId(), convertedProgress);
+        }
+
+        return allProgress;
+    }
+
+    @Transactional
+    public void recordProgress(Long userId, RecordRequest request) {
+
+
+        Bible bible = bibleRepository.findById(request.bibleId()).orElseThrow(() -> new EntityNotFoundException("해당 성경이 존재하지 않습니다."));
+        // ---> 어차피 bible은 totalChapter를 알아야하기 때문에 getReferenceById써도 의미가 없음
+        Progress progress = progressRepository.findByUserIdAndBibleId(userId, request.bibleId())
+                .orElseGet(() -> {
+                    // 읽은 기록이 없는 경우 새롭게 생성
+                    User user = userRepository.getReferenceById(userId); // <<<< getReferenceById는 조회 쿼리 안날림!
+                    Progress newProgress = new Progress(user, bible);
+                    return progressRepository.save(newProgress);
+                    // 새로 생성한건 save를 명시적으로 해줘야 영속 상태가 된다
+                });
+
+        Map<Integer, Integer> convertedProgress = convertBitmapToReadMap(progress.getProgressData());
+
+        convertedProgress.merge(request.chapterNumber(), 1, Integer::sum);
+        // ---> 해당 키 값이 없으면 1을 넣고, 있으면 기존 값에 +1을 함
+
+        // 마지막으로 읽은 장 업데이트
+        progress.updateLastReadChapter(request.chapterNumber());
+
+        String updatedBitmap = convertReadMapToBitmap(convertedProgress, bible.getTotalChapter());
+        log.debug("✅ HashMap -> Bitmap 변환 완료 : {} {}장", bible.getKorName(), request.chapterNumber());
+
+        progress.updateProgressData(updatedBitmap); // progressData 업데이트
+    }
+
+    // map -> bitmap
+    private String convertReadMapToBitmap(Map<Integer, Integer> map, int totalChapter) {
+        List<String> list = new ArrayList<>();
+        for (int i = 1; i <= totalChapter; i++) {
+            list.add(String.valueOf(map.getOrDefault(i, 0)));
+        }
+        return String.join(",", list);
+    }
+
+    // DB에 저장된 비트맵을 Map 형태로 변환해주는 메서드
+    private Map<Integer, Integer> convertBitmapToReadMap(String bitmap) {
+
+        /**
+         * [1,0,1,3,0, ...]
+         */
+
+        Map<Integer, Integer> progress = new HashMap<>(); // <읽은 장, 읽은 횟수>
+        String[] splitBitmap = bitmap.split(",");
+        for(int i=0; i< splitBitmap.length; i++) {
+            if(Integer.parseInt(splitBitmap[i]) == 0) {
+                continue;
+                // 한번도 안읽었으면 굳이 안넣어도 됨
+            }
+            progress.put(i+1, Integer.parseInt(splitBitmap[i]));
+        }
+
+        return progress;
+    }
+}

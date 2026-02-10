@@ -2,118 +2,134 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Step 1189 | 성경 목록</title>
+    <title>Step 1189 | Bible Tracker</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 { color: #38bdf8; text-align: center; margin-bottom: 30px; }
-
-        /* 구약/신약 구분 탭 느낌 */
-        .section-title { font-size: 1.5rem; color: #94a3b8; border-bottom: 2px solid #334155; padding-bottom: 10px; margin: 40px 0 20px; }
-
-        /* 그리드 레이아웃 */
-        .bible-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-        }
-
-        /* 성경 카드 스타일 */
-        .bible-card {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid #334155;
-        }
-        .bible-card:hover { border-color: #38bdf8; transform: translateY(-3px); background: #2d3e5a; }
-        .bible-name { font-weight: bold; font-size: 1.1rem; display: block; }
-        .bible-eng { font-size: 0.8rem; color: #64748b; }
-
-        /* 장 선택 레이어 (모달이나 드롭다운 대신 간단하게 구현) */
-        .chapter-container {
-            display: none;
-            background: #0f172a;
-            grid-column: 1 / -1;
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px dashed #38bdf8;
-            margin-top: 10px;
-        }
-        .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 8px; }
-        .chapter-btn {
-            background: #334155; color: white; border: none; padding: 8px;
-            border-radius: 6px; cursor: pointer; font-size: 0.9rem;
-        }
-        .chapter-btn:hover { background: #38bdf8; color: #0f172a; }
-        .active { display: block !important; }
+        /* (기존 CSS 그대로 유지) */
+        body { font-family: 'Pretendard', sans-serif; background: #f8f9fa; color: #212529; margin: 0; padding: 40px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 { color: #2ea44f; text-align: center; font-weight: 800; margin-bottom: 50px; }
+        .section-title { font-size: 1.2rem; color: #868e96; margin: 40px 0 20px; font-weight: 600; display: flex; align-items: center; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: #e9ecef; margin-left: 15px; }
+        .bible-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+        .bible-card { background: white; padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.25s ease; position: relative; box-shadow: 0 4px 16px 0 rgba(0,0,0,0.04); border: 1px solid #f1f3f5; }
+        .bible-card:hover { transform: translateY(-8px); box-shadow: 0 12px 20px 0 rgba(0,0,0,0.08); border-color: #2ea44f; }
+        .bible-name { font-weight: 700; font-size: 1.1rem; color: #212529; display: block; margin-bottom: 5px;}
+        .bible-eng { font-size: 0.85rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 0.5px; }
+        .level-0 { background-color: #ebedf0 !important; }
+        .level-1 { background-color: #9be9a8 !important; color: #1b1f23 !important; }
+        .level-2 { background-color: #40c463 !important; color: white !important; }
+        .level-3 { background-color: #30a14e !important; color: white !important; }
+        .level-4 { background-color: #216e39 !important; color: white !important; }
+        .grass-tooltip { visibility: hidden; position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%); background: #24292f; color: white; padding: 12px; border-radius: 8px; z-index: 100; width: 150px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; }
+        .bible-card:hover .grass-tooltip { visibility: visible; opacity: 1; }
+        .grass-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; margin-top: 8px; }
+        .grass-box { width: 10px; height: 10px; border-radius: 2px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(33, 37, 41, 0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 90%; max-width: 550px; max-height: 80vh; border-radius: 16px; padding: 30px; position: relative; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f1f3f5; padding-bottom: 15px; }
+        .modal-title { font-size: 1.5rem; font-weight: 800; color: #2ea44f; }
+        .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 10px; }
+        .chapter-btn { border: 1px solid #e9ecef; padding: 12px 0; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: 0.2s; }
+        .active-modal { display: flex !important; }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>Step 1189 성경 읽기 📖</h1>
+    <h1>Step 1189 🌿</h1>
 
-    <div class="section-title">구약 성경 (Old Testament)</div>
+    <div class="section-title">BIBLE LIST</div>
     <div class="bible-grid">
-        <div th:each="bible : ${bibles}" th:if="${bible.testament.name() == 'OLD'}" class="bible-card"
-             th:onclick="'toggleChapters(' + ${bible.id} + ')'">
-            <span class="bible-name" th:text="${bible.korName}">창세기</span>
-            <span class="bible-eng" th:text="${bible.engName}">Genesis</span>
+        <div th:each="bible : ${bibles}" class="bible-card"
+             th:id="'bible-card-' + ${bible.id}"
+             th:onclick="openModal([[${bible.id}]], [[${bible.korName}]], [[${bible.totalChapter}]])">
+            <span class="bible-name" th:text="${bible.korName}"></span>
+            <span class="bible-eng" th:text="${bible.engName}"></span>
 
-            <div th:id="'chapters-' + ${bible.id}" class="chapter-container">
-                <p th:text="${bible.korName} + ' 장 선택'"></p>
-                <div class="chapter-grid">
-                    <button th:each="i : ${#numbers.sequence(1, bible.totalChapter)}"
-                            class="chapter-btn"
-                            th:text="${i}"
-                            th:onclick="|recordProgress(${bible.id}, ${i})|">
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section-title">신약 성경 (New Testament)</div>
-    <div class="bible-grid">
-        <div th:each="bible : ${bibles}" th:if="${bible.testament.name() == 'NEW'}" class="bible-card"
-             th:onclick="'toggleChapters(' + ${bible.id} + ')'">
-            <span class="bible-name" th:text="${bible.korName}">마태복음</span>
-            <span class="bible-eng" th:text="${bible.engName}">Matthew</span>
-
-            <div th:id="'chapters-' + ${bible.id}" class="chapter-container">
-                <p th:text="${bible.korName} + ' 장 선택'"></p>
-                <div class="chapter-grid">
-                    <button th:each="i : ${#numbers.sequence(1, bible.totalChapter)}"
-                            class="chapter-btn" th:text="${i}"
-                            th:onclick="|recordProgress(${bible.id}, ${i})|">
-                    </button>
+            <div class="grass-tooltip">
+                <span class="tooltip-text" th:text="${bible.korName} + ' Progress'"></span>
+                <div class="grass-grid">
+                    <div th:each="i : ${#numbers.sequence(1, (bible.totalChapter > 50 ? 50 : bible.totalChapter))}"
+                         class="grass-box"
+                         th:attr="data-chapter=${i}"
+                         th:with="bibleData=${userProgress.get(bible.id.toString())}, count=${bibleData != null ? bibleData.get(i.toString()) : 0}"
+                         th:classappend="${count != null && count > 0 ? 'level-' + (count > 4 ? 4 : count) : 'level-0'}">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div id="modalOverlay" class="modal-overlay" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <span id="modalBibleName" class="modal-title"></span>
+            <button style="background:none; border:none; font-size:1.5rem; cursor:pointer;" onclick="closeModal()">✕</button>
+        </div>
+        <div id="chapterGrid" class="chapter-grid"></div>
+    </div>
+</div>
+
 <script th:inline="javascript">
-    // 성경 클릭 시 장 목록 보여주기
-    function toggleChapters(id) {
-        const container = document.getElementById('chapters-' + id);
-        const allContainers = document.querySelectorAll('.chapter-container');
+    const userProgress = [[${userProgress}]];
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBibleName = document.getElementById('modalBibleName');
+    const chapterGrid = document.getElementById('chapterGrid');
 
-        // 다른 게 열려있으면 닫기
-        allContainers.forEach(c => {
-            if(c.id !== 'chapters-' + id) c.classList.remove('active');
-        });
-
-        container.classList.toggle('active');
-        event.stopPropagation(); // 카드 클릭 이벤트가 버튼까지 전달되지 않게 방지
+    function getLevelClass(count) {
+        if (!count || count === 0) return 'level-0';
+        const c = parseInt(count);
+        return c >= 4 ? 'level-4' : 'level-' + c;
     }
 
-    // 실제 체크 기록 API 호출 (나중에 구현할 부분)
-    function recordProgress(bibleId, chapter) {
-        alert(bibleId + '번 성경 ' + chapter + '장을 읽으셨군요! 기록을 시작합니다.');
-        // 여기서 fetch() 등을 이용해 서버에 데이터를 보낼 거야!
+    function recordProgress(bibleId, chapter, btnElement) {
+        fetch('/progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bibleId: bibleId, chapterNumber: chapter })
+        }).then(res => {
+            if (res.ok) {
+                // 1. 로컬 데이터 동기화
+                if (!userProgress[bibleId]) userProgress[bibleId] = {};
+                let nextCount = (parseInt(userProgress[bibleId][chapter] || 0)) + 1;
+                userProgress[bibleId][chapter] = nextCount;
+
+                // 2. 모달 내 버튼 색상 변경
+                btnElement.className = 'chapter-btn ' + getLevelClass(nextCount);
+
+                // 3. 💡 메인 카드의 툴팁 잔디 실시간 변경
+                const bibleCard = document.getElementById(`bible-card-${bibleId}`);
+                if (bibleCard) {
+                    // 툴팁 안에서 해당 장(chapter)의 data-chapter를 가진 grass-box를 찾음
+                    const grassBox = bibleCard.querySelector(`.grass-box[data-chapter="${chapter}"]`);
+                    if (grassBox) {
+                        grassBox.className = 'grass-box ' + getLevelClass(nextCount);
+                    }
+                }
+            }
+        });
+    }
+
+    function openModal(id, name, totalChapters) {
+        modalBibleName.innerText = name;
+        chapterGrid.innerHTML = '';
+        const bibleData = userProgress[id.toString()] || {};
+        for (let i = 1; i <= totalChapters; i++) {
+            const btn = document.createElement('button');
+            const count = bibleData[i.toString()] || 0;
+            btn.className = 'chapter-btn ' + getLevelClass(count);
+            btn.innerText = i;
+            btn.onclick = () => recordProgress(id, i, btn);
+            chapterGrid.appendChild(btn);
+        }
+        modalOverlay.classList.add('active-modal');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modalOverlay.classList.remove('active-modal');
+        document.body.style.overflow = 'auto';
     }
 </script>
 </body>
