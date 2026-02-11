@@ -5,6 +5,7 @@ import org.example.domain.progress.dto.RecordRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -23,6 +24,15 @@ public class ProgressController {
         return ResponseEntity.ok().body(allProgress);
     }
 
+    @GetMapping("/api/main")
+    public ResponseEntity<Map<LocalDate, Integer>> getDailyProgress(
+            @RequestHeader(value = "X-USER-ID", defaultValue = "1") Long userId
+    ) {
+        Map<LocalDate, Integer> result = progressService.getDailyProgress(userId);
+        return ResponseEntity.ok().body(result);
+    }
+
+    // 해당 장을 '읽음' 표시
     @PostMapping("/progress")
     public ResponseEntity<Void> recordProgress(
             @RequestHeader(value = "X-USER-ID", defaultValue = "1") Long userId,

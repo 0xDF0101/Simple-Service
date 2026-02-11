@@ -2,7 +2,7 @@ package org.example.domain.bible;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.domain.progress.ProgressService;
+import org.example.domain.progress.JpaProgressServiceImpl;
 import org.example.entity.Bible;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import java.util.List;
 public class BibleController {
 
     private final BibleService bibleService;
-    private final ProgressService progressService;
+    private final JpaProgressServiceImpl jpaProgressServiceImpl;
 
     @ResponseBody
     @GetMapping("/bibles/{bibleId}")
@@ -48,7 +48,7 @@ public class BibleController {
 
 
         model.addAttribute("bibles", bibleService.getAllBibles());
-        model.addAttribute("userProgress", progressService.getAllProgress(userId));
+        model.addAttribute("userProgress", jpaProgressServiceImpl.getAllProgress(userId));
 
         return "bible-list";
     }

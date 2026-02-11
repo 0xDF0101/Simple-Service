@@ -90,18 +90,20 @@
             body: JSON.stringify({ bibleId: bibleId, chapterNumber: chapter })
         }).then(res => {
             if (res.ok) {
-                // 1. 로컬 데이터 동기화
-                if (!userProgress[bibleId]) userProgress[bibleId] = {};
-                let nextCount = (parseInt(userProgress[bibleId][chapter] || 0)) + 1;
-                userProgress[bibleId][chapter] = nextCount;
+                // 💡 문자열 키로 확실히 변환해서 저장!
+                const bId = bibleId.toString();
+                const cNum = chapter.toString();
+
+                if (!userProgress[bId]) userProgress[bId] = {};
+                let nextCount = (parseInt(userProgress[bId][cNum] || 0)) + 1;
+                userProgress[bId][cNum] = nextCount;
 
                 // 2. 모달 내 버튼 색상 변경
                 btnElement.className = 'chapter-btn ' + getLevelClass(nextCount);
 
-                // 3. 💡 메인 카드의 툴팁 잔디 실시간 변경
+                // 3. 메인 카드의 툴팁 잔디 실시간 변경
                 const bibleCard = document.getElementById(`bible-card-${bibleId}`);
                 if (bibleCard) {
-                    // 툴팁 안에서 해당 장(chapter)의 data-chapter를 가진 grass-box를 찾음
                     const grassBox = bibleCard.querySelector(`.grass-box[data-chapter="${chapter}"]`);
                     if (grassBox) {
                         grassBox.className = 'grass-box ' + getLevelClass(nextCount);
@@ -131,6 +133,7 @@
         modalOverlay.classList.remove('active-modal');
         document.body.style.overflow = 'auto';
     }
+
 </script>
 </body>
 </html>

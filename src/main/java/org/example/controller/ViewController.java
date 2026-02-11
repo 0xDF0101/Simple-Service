@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import ch.qos.logback.core.model.Model;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Slf4j
-public class HomeController {
+public class ViewController {
 
     @RequestMapping("/")
     public String index() {
@@ -19,6 +18,11 @@ public class HomeController {
     @GetMapping("/register")
     public String register() {
         return "register";
+    }
+
+    @GetMapping("/main")
+    public String getMain() {
+        return "main";
     }
 
 }
