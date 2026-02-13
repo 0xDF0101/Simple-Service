@@ -23,3 +23,15 @@ spring:
   sql:
     init:
       mode: always # 항상 실행
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            # 💡 구글 클라우드 콘솔에서 발급받은 정보를 여기 넣어야 해!
+            client-id:
+            client-secret:
+            scope:
+              - email
+              - profile

@@ -30,8 +30,10 @@ public class User {
     private List<Progress> progressList = new ArrayList<>();
 
 
-    @Column(name = "nickname",  length = 50, nullable = false, unique = true)
+    @Column(name = "nickname",  length = 50, nullable = false)
     private String nickname;
+
+    private String name;
 
     @Column(unique = true)
     private String email;
@@ -66,8 +68,22 @@ public class User {
     @Column(nullable = false)
     private String providerId;
 
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public User(String name, String nickname, String email, String provider, String providerId) {
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.role = Role.USER;
+    }
+
     public User(UserCreateRequest request) {
         this.email = request.email();
+        this.name = request.name();
         this.nickname = request.nickname();
         this.statusMessage = request.statusMessage();
         this.provider = "Google";
