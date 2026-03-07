@@ -1,4 +1,4 @@
-package org.example.domain.progress.dto;
+package org.example.dto.progress;
 
 public record RecordRequest(
         int bibleId, // 읽은 권

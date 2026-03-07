@@ -1,7 +1,8 @@
-package org.example.domain.progress;
+package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.progress.dto.RecordRequest;
+import org.example.service.ProgressService;
+import org.example.dto.progress.RecordRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

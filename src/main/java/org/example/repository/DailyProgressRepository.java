@@ -1,6 +1,6 @@
-package org.example.domain.progress;
+package org.example.repository;
 
-import org.example.domain.progress.dto.DailyProgressDto;
+import org.example.dto.progress.DailyProgressDto;
 import org.example.entity.DailyProgress;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

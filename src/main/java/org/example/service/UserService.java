@@ -1,11 +1,12 @@
-package org.example.domain.user;
+package org.example.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.repository.UserRepository;
 import org.example.entity.User;
 import org.example.exception.EntityNotFoundException;
-import org.example.domain.user.dto.UserCreateRequest;
-import org.example.domain.user.dto.UserInfo;
+import org.example.dto.user.UserCreateRequest;
+import org.example.dto.user.UserInfo;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,9 +1,10 @@
-package org.example.domain.user;
+package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.domain.user.dto.UserCreateRequest;
-import org.example.domain.user.dto.UserInfo;
+import org.example.service.UserService;
+import org.example.dto.user.UserCreateRequest;
+import org.example.dto.user.UserInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package org.example.domain.progress.dto;
+package org.example.dto.progress;
 
 import java.time.LocalDate;
 

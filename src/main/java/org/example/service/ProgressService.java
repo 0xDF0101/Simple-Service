@@ -1,6 +1,6 @@
-package org.example.domain.progress;
+package org.example.service;
 
-import org.example.domain.progress.dto.RecordRequest;
+import org.example.dto.progress.RecordRequest;
 
 import java.time.LocalDate;
 import java.util.Map;
