@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Step 1189 | Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; /* 모바일에서 화면 끝에 붙지 않게 여백 */
+            box-sizing: border-box;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .logo { font-size: 2.2rem; font-weight: 800; color: #2ea44f; margin-bottom: 8px; display: block; text-decoration: none; letter-spacing: -1px; }
+        .subtitle { color: #868e96; margin-bottom: 35px; font-size: 0.95rem; line-height: 1.5; }
+
+        .form-group { text-align: left; margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #495057; padding-left: 4px; }
+        .form-group input {
+            width: 100%;
+            padding: 14px; /* 터치하기 편하게 높이 키움 */
+            border: 1.5px solid #edf2f7;
+            border-radius: 12px;
+            box-sizing: border-box;
+            transition: 0.2s;
+            font-size: 1rem; /* 아이폰 자동 줌 방지 (16px 이상 권장) */
+        }
+        .form-group input:focus { border-color: #2ea44f; outline: none; background-color: #f0fff4; }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: #2ea44f;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(46, 164, 79, 0.2);
+        }
+        .btn-login:active { transform: scale(0.98); } /* 클릭 시 눌리는 피드백 */
+
+        .divider { margin: 35px 0; position: relative; border-top: 1px solid #f1f3f5; }
+        .divider span { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; padding: 0 15px; font-size: 0.8rem; color: #adb5bd; }
+
+        .btn-google {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            border: 1.5px solid #edf2f7;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            color: #212529;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+        .btn-google img { width: 20px; }
+
+        .error-msg {
+            background-color: #fff5f5;
+            color: #fa5252;
+            font-size: 0.85rem;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffe3e3;
+        }
+
+        /* --- 📱 모바일 전용 미디어 쿼리 --- */
+        @media (max-width: 480px) {
+            body { padding: 15px; }
+            .login-card {
+                padding: 30px 20px;
+                border-radius: 24px; /* 모바일에서 더 둥글게 하면 귀여워 */
+                box-shadow: 0 4px 20px rgba(0,0,0,0.03); /* 모바일은 그림자 살짝 연하게 */
+            }
+            .logo { font-size: 1.8rem; }
+            .subtitle { font-size: 0.85rem; margin-bottom: 25px; }
+            .btn-login, .btn-google { padding: 16px; } /* 엄지손가락 크기에 맞춰 더 크게 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <a href="/" class="logo">Step 1189 🌿</a>
+    <p class="subtitle">나만의 성경 읽기 페이스메이커<br>1,189장의 여정을 함께해요</p>
+
+    <div th:if="${param.error}" class="error-msg">
+        이메일 또는 비밀번호가 맞지 않아요. 😢
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label>이메일 주소</label>
+            <input type="email" name="username" placeholder="example@email.com" required autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input type="password" name="password" placeholder="비밀번호 입력" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-login">로그인하기</button>
+    </form>
+
+    <div class="divider"><span>간편 로그인</span></div>
+
+    <a href="/oauth2/authorization/google" class="btn-google">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.svg" alt="Google">
+        Google 계정으로 시작하기
+    </a>
+</div>
+
+</body>
+</html>

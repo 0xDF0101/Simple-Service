@@ -25,4 +25,8 @@ public class ViewController {
         return "main";
     }
 
+    @GetMapping("/login")
+    public String loginPage() { return "login"; }
+
+
 }
