@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -20,7 +22,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/h2-console/**", "/login", "/signup").permitAll() // 이 경로에만 로그인 없이 접근 가능
+                        .requestMatchers("/", "/h2-console/**", "/login", "/signup", "/api/v1/users").permitAll() // 이 경로에만 로그인 없이 접근 가능
 //                        .requestMatchers("/", "/h2-console/**").permitAll() // 이 경로에만 로그인 없이 접근 가능
                         .anyRequest().authenticated() // 다른 요청들은 로그인 필요
                 )
@@ -36,4 +38,10 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
+

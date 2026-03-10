@@ -31,7 +31,6 @@ public class ProgressController {
             @RequestHeader(value = "X-USER-ID", defaultValue = "1") Long userId,
             @RequestBody RecordRequest request
     ) {
-
         progressService.recordProgress(userId, request);
         return ResponseEntity.ok().build();
     }
@@ -44,7 +43,4 @@ public class ProgressController {
         Map<LocalDate, Integer> result = progressService.getDailyProgress(userId);
         return ResponseEntity.ok().body(result);
     }
-
-
-
 }

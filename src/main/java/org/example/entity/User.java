@@ -66,27 +66,26 @@ public class User {
     private LocalDateTime updatedAt;
 
     // OAuth 제공자 ID
-    @Column(nullable = false)
     private String providerId;
 
     public void updateName(String name) {
         this.name = name;
     }
 
-    public User(String name, String nickname, String email, String socialType, String providerId) {
+    // Local signUp용 생성자
+    public User(String name, String password, String nickname, String email, String socialType) {
         this.name = name;
+        this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.socialType = socialType;
-        this.providerId = providerId;
         this.role = Role.USER;
     }
 
     public User(UserCreateRequest request) {
         this.email = request.email();
         this.name = request.name();
-        this.nickname = request.nickname();
-        this.statusMessage = request.statusMessage();
+        this.nickname = request.name();
         this.socialType = "Google";
         this.providerId = "000000";
         this.role = Role.USER;

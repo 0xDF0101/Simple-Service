@@ -28,5 +28,8 @@ public class ViewController {
     @GetMapping("/login")
     public String loginPage() { return "login"; }
 
+    @GetMapping("/signup")
+    public String signUpPage() { return "signup"; }
+
 
 }

@@ -22,20 +22,34 @@ public class UserController {
         return ResponseEntity.ok().body(userinfo);
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<Void> createUser(UserCreateRequest request) {
+//    @PostMapping("/users")
+//    public ResponseEntity<Void> createUser(UserCreateRequest request) {
+//
+//        if(request == null) {
+//            throw new IllegalArgumentException(); // <<<< 커스텀 예외처리 하기
+//        }
+
+//        userService.createUser(request);
+//
+//        log.info("회원 등록 완료 : ", request.nickname());
+//        return ResponseEntity.ok().build();
+//    }
 
 
+    @PostMapping("/api/v1/users")
+    public ResponseEntity<Void> createUser(@RequestBody UserCreateRequest request) {
 
         if(request == null) {
             throw new IllegalArgumentException(); // <<<< 커스텀 예외처리 하기
         }
 
-        userService.createUser(request);
+        userService.signUp(request);
 
-        log.info("회원 등록 완료 : ", request.nickname());
+        log.info("회원 등록 완료 : ", request.name());
         return ResponseEntity.ok().build();
     }
+
+
 
 
 

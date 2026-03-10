@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Step 1189 | Join</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <style>
+        :root { --primary-green: #2ea44f; --light-green: #f0fff4; --error-red: #fa5252; }
+        body { font-family: 'Pretendard', sans-serif; background: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+
+        .signup-card { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 450px; box-sizing: border-box; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary-green); text-decoration: none; display: block; margin-bottom: 8px; }
+        .subtitle { color: #868e96; font-size: 0.9rem; }
+
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #495057; padding-left: 4px; }
+        .form-group input {
+            width: 100%; padding: 14px; border: 1.5px solid #edf2f7; border-radius: 12px;
+            box-sizing: border-box; transition: 0.2s; font-size: 1rem;
+        }
+        .form-group input:focus { border-color: var(--primary-green); outline: none; background-color: var(--light-green); }
+
+        /* 유효성 검사 메시지 스타일 */
+        .msg { font-size: 0.75rem; margin-top: 5px; padding-left: 4px; display: none; }
+        .msg.error { color: var(--error-red); display: block; }
+        .msg.success { color: var(--primary-green); display: block; }
+
+        .btn-signup {
+            width: 100%; padding: 16px; background: var(--primary-green); color: white;
+            border: none; border-radius: 12px; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: 0.2s; margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(46, 164, 79, 0.2);
+        }
+        .btn-signup:disabled { background: #adb5bd; cursor: not-get; box-shadow: none; }
+
+        .footer-links { text-align: center; margin-top: 25px; font-size: 0.85rem; color: #868e96; }
+        .footer-links a { color: var(--primary-green); text-decoration: none; font-weight: 600; margin-left: 5px; }
+
+        @media (max-width: 480px) {
+            .signup-card { padding: 30px 20px; border-radius: 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+            body { padding: 0; background: white; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-card">
+    <div class="header">
+        <a href="/" class="logo">Step 1189 🌿</a>
+        <p class="subtitle">새로운 성경 읽기 여정을 시작해볼까요?</p>
+    </div>
+
+    <form th:action="@{/api/v1/users}" method="post" id="signupForm">
+        <div class="form-group">
+            <label>이메일</label>
+            <input type="email" name="email" id="email" placeholder="example@email.com" required>
+            <span class="msg" id="emailMsg"></span>
+        </div>
+
+        <div class="form-group">
+            <label>이름</label>
+            <input type="text" name="name" id="name" placeholder="이름을 입력하세요" required>
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input type="password" name="password" id="password" placeholder="8자 이상 입력해주세요" required>
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호 확인</label>
+            <input type="password" id="passwordConfirm" placeholder="비밀번호를 한 번 더 입력해주세요" required>
+            <span class="msg" id="passwordMsg"></span>
+        </div>
+
+        <button type="submit" class="btn-signup" id="submitBtn">가입 완료하기</button>
+    </form>
+
+    <div class="footer-links">
+        이미 계정이 있으신가요? <a href="/login">로그인</a>
+    </div>
+</div>
+
+<script>
+    // 💡 간단한 비밀번호 일치 확인 스크립트
+    const password = document.getElementById('password');
+    const confirm = document.getElementById('passwordConfirm');
+    const msg = document.getElementById('passwordMsg');
+    const btn = document.getElementById('submitBtn');
+
+    function validate() {
+        if (confirm.value === "") {
+            msg.style.display = "none";
+            return;
+        }
+        if (password.value === confirm.value) {
+            msg.textContent = "비밀번호가 일치합니다.";
+            msg.className = "msg success";
+            btn.disabled = false;
+        } else {
+            msg.textContent = "비밀번호가 서로 달라요.";
+            msg.className = "msg error";
+            btn.disabled = true;
+        }
+    }
+
+    password.addEventListener('input', validate);
+    confirm.addEventListener('input', validate);
+
+    // 회원가입 버튼
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // 중요! 브라우저가 페이지를 새로고침하며 이동하는 걸 막음
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/api/v1/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // 컨트롤러의 @RequestBody와 짝꿍!
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("가입 완료! 🌿");
+                    window.location.href = "/login";
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    });
+</script>
+
+</body>
+</html>
