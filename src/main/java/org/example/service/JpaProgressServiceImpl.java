@@ -1,12 +1,14 @@
-package org.example.domain.progress;
+package org.example.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.domain.bible.BibleRepository;
-import org.example.domain.progress.dto.DailyProgressDto;
-import org.example.domain.progress.dto.RecordRequest;
-import org.example.domain.user.UserRepository;
+import org.example.repository.BibleRepository;
+import org.example.repository.DailyProgressRepository;
+import org.example.repository.ProgressRepository;
+import org.example.dto.progress.DailyProgressDto;
+import org.example.dto.progress.RecordRequest;
+import org.example.repository.UserRepository;
 import org.example.entity.Bible;
 import org.example.entity.Progress;
 import org.example.entity.DailyProgress;

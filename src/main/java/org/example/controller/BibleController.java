@@ -1,8 +1,9 @@
-package org.example.domain.bible;
+package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.domain.progress.JpaProgressServiceImpl;
+import org.example.service.BibleService;
+import org.example.service.JpaProgressServiceImpl;
 import org.example.entity.Bible;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

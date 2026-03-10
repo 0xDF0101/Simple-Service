@@ -1,4 +1,4 @@
-package org.example.domain.user.dto;
+package org.example.dto.user;
 
 public record UserCreateRequest(
 

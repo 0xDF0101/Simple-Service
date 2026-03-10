@@ -1,7 +1,8 @@
-package org.example.domain.bible;
+package org.example.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.repository.BibleRepository;
 import org.example.entity.Bible;
 import org.example.exception.EntityNotFoundException;
 import org.springframework.boot.ApplicationArguments;

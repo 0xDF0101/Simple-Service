@@ -1,4 +1,4 @@
-package org.example.domain.progress;
+package org.example.repository;
 
 import org.example.entity.Progress;
 import org.springframework.data.jpa.repository.JpaRepository;
