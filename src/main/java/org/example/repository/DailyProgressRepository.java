@@ -17,7 +17,7 @@ public interface DailyProgressRepository extends JpaRepository<DailyProgress, Lo
     Optional<DailyProgress> findByUserIdAndReadDate(Long userId, LocalDate readDate);
 
 
-    @Query("SELECT new org.example.domain.progress.dto.DailyProgressDto(dp.readDate, CAST(SUM(dp.count) AS int)) " +
+    @Query("SELECT new org.example.dto.progress.DailyProgressDto(dp.readDate, CAST(SUM(dp.count) AS int)) " +
             "FROM DailyProgress dp " +
             "WHERE dp.user.id = :userId AND dp.readDate >= :oneYearAgo " +
             "GROUP BY dp.readDate")

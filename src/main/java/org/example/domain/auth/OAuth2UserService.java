@@ -1,9 +1,9 @@
 package org.example.domain.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.user.UserRepository;
 import org.example.entity.User;
 import org.example.model.Role;
+import org.example.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
