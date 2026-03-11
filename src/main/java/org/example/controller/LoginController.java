@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class LoginController {
 
-    // TODO
-    // login 로직 수행해야함!
+    // SpringSecurity 로 이관
 
 }

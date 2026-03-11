@@ -1,9 +1,12 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.user.CustomUserDetails;
 import org.example.service.ProgressService;
 import org.example.dto.progress.RecordRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,8 +22,9 @@ public class ProgressController {
     // 모든 장의 모든 진척도 요청
     @GetMapping("/progress")
     public ResponseEntity<Map<Integer, Map<Integer, Integer>>> getProgress(
-            @RequestHeader(value = "X-USER-ID", defaultValue = "1") Long userId
+            @AuthenticationPrincipal CustomUserDetails customUser
     ) {
+        Long userId = customUser.getUserId();
         Map<Integer, Map<Integer, Integer>> allProgress = progressService.getAllProgress(userId);
 
         return ResponseEntity.ok().body(allProgress);
@@ -29,9 +33,11 @@ public class ProgressController {
     // 해당 장을 '읽음' 표시
     @PostMapping("/progress")
     public ResponseEntity<Void> recordProgress(
-            @RequestHeader(value = "X-USER-ID", defaultValue = "1") Long userId,
+            @AuthenticationPrincipal CustomUserDetails customUser,
             @RequestBody RecordRequest request
     ) {
+        Long userId = customUser.getUserId();
+
         progressService.recordProgress(userId, request);
         return ResponseEntity.ok().build();
     }
@@ -39,8 +45,9 @@ public class ProgressController {
     // 하루에 읽은 양을 가져옴
     @GetMapping("/main")
     public ResponseEntity<Map<LocalDate, Integer>> getDailyProgress(
-            @RequestHeader(value = "X-USER-ID", defaultValue = "1") Long userId
+            @AuthenticationPrincipal CustomUserDetails customUser
     ) {
+        Long userId = customUser.getUserId();
         Map<LocalDate, Integer> result = progressService.getDailyProgress(userId);
         return ResponseEntity.ok().body(result);
     }
