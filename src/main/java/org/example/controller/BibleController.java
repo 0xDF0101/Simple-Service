@@ -2,10 +2,12 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.user.CustomUserDetails;
 import org.example.service.BibleService;
 import org.example.service.JpaProgressServiceImpl;
 import org.example.entity.Bible;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +45,12 @@ public class BibleController {
 
     @GetMapping("/bibles")
     public String getBibles(
-            @RequestHeader(value = "X-USER-ID", defaultValue = "1") Long userId,
+//            @RequestHeader(value = "X-USER-ID") Long userId,
+            @AuthenticationPrincipal CustomUserDetails customUser,
             Model model
             ) {
 
+        Long userId = customUser.getUserId();
 
         model.addAttribute("bibles", bibleService.getAllBibles());
         model.addAttribute("userProgress", jpaProgressServiceImpl.getAllProgress(userId));
