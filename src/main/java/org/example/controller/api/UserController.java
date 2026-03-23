@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +46,10 @@ public class UserController {
 
         userService.signUp(request);
 
-        log.info("회원 등록 완료 : ", request.name());
+        log.info("회원 등록 완료 : ", request.username());
         return ResponseEntity.ok().build();
     }
+
 
 
 

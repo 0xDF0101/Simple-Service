@@ -1,9 +1,7 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.example.model.Role;
 import org.example.dto.user.UserCreateRequest;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,6 +17,8 @@ import java.util.List;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -32,13 +32,16 @@ public class User {
     @Column(length = 100)
     private String password;
 
-    @Column(name = "social_type", nullable = true)
+    // 어떤 방식으로 로그인했는지
+    // Local, Google, Naver, Apple 등
+    @Column(name = "social_type")
     private String socialType;
 
-    @Column(name = "nickname",  length = 50, nullable = false)
-    private String nickname;
+    @Column(name = "username",  length = 50, nullable = false, unique = true)
+    private String username;
 
-    private String name;
+//    private String name;
+    // ---> 실명은 굳이 입력할 이유가 없다!
 
     @Column(unique = true)
     private String email;
@@ -68,24 +71,11 @@ public class User {
     // OAuth 제공자 ID
     private String providerId;
 
-    public void updateName(String name) {
-        this.name = name;
-    }
-
-    // Local signUp용 생성자
-    public User(String name, String password, String nickname, String email, String socialType) {
-        this.name = name;
-        this.password = password;
-        this.nickname = nickname;
-        this.email = email;
-        this.socialType = socialType;
-        this.role = Role.USER;
-    }
 
     public User(UserCreateRequest request) {
         this.email = request.email();
-        this.name = request.name();
-        this.nickname = request.name();
+//        this.name = request.name();
+        this.username = request.username();
         this.socialType = "Google";
         this.providerId = "000000";
         this.role = Role.USER;

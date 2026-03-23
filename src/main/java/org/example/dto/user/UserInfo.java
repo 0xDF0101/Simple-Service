@@ -19,7 +19,7 @@ public record UserInfo(
 ) {
     public UserInfo(User user) {
         this(
-                user.getNickname(),
+                user.getUsername(),
                 user.getProgressList(),
                 user.getEmail(),
                 user.getRole(),

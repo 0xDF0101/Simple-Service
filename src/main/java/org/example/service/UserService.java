@@ -3,6 +3,7 @@ package org.example.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.model.Role;
 import org.example.repository.UserRepository;
 import org.example.entity.User;
 import org.example.exception.EntityNotFoundException;
@@ -24,34 +25,41 @@ public class UserService {
         return new UserInfo(user);
     }
 
-    // 임시
+    // 임시 로직 ---> 추후에 없애도 됨
     public void createUser(UserCreateRequest request) {
         User user = new User(request);
         userRepository.save(user);
-        log.info("저장 완료 : {}", user.getNickname());
+        log.info("저장 완료 : {}", user.getUsername());
     }
 
     /**
-     *         String name,
+     *         String username,
      *         String password,
-     *         String nickname,
      *         String email,
      *         String statusMessage
      */
 
-    // 회원 가입 로직
+    // Local 회원 가입 로직
     @Transactional
     public void signUp(UserCreateRequest dto) {
 
         String encodedPassword = passwordEncoder.encode(dto.password());
 
-        User user = new User(
-                dto.name(),
-                encodedPassword,
-                dto.name(), // 일단 닉네임은 이름과 동일
-                dto.email(),
-                "Local"
-        );
+//        User user = new User(
+//                dto.username(),
+//                encodedPassword,
+//                dto.email(),
+//                "Local"
+//        );
+        User user = User.builder()
+                .username(dto.username())
+                .password(encodedPassword)
+                .email(dto.email())
+                .role(Role.USER)
+                .socialType("Local")
+                .build();
+
+
 
 //        userRepository.save(user);
         userRepository.saveAndFlush(user);

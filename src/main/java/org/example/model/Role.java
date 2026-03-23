@@ -1,18 +1,15 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum Role {
-    USER("ROLE_USER"),
-    ADMIN("ROLE_ADMIN");
+    USER("ROLE_USER", "회원"),
+    ADMIN("ROLE_ADMIN", "관리자"),
+    PRE_USER("ROLE_PRE_USER", "준회원");
 
     private final String key;
-
-    // 생성자
-    Role(String key) {
-        this.key = key;
-    }
-
-    // 시큐리티가 권한을 확인할 때 쓸 키값 (위에서 쓴 getKey()가 이거야!)
-    public String getKey() {
-        return key;
-    }
+    private final String title;
 }
